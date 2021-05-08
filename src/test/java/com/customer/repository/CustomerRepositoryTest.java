@@ -1,6 +1,5 @@
 package com.customer.repository;
 
-import com.customer.CustomerRepository;
 import com.customer.document.Customer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

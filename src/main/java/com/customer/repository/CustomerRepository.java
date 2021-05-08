@@ -1,4 +1,4 @@
-package com.customer;
+package com.customer.repository;
 
 import com.customer.document.Customer;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
