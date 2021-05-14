@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Map;
+
 import static com.customer.constants.CustomerConstants.CUSTOMER_END_POINT;
 
 @RestController
@@ -38,11 +40,25 @@ public class CustomerController {
                 .defaultIfEmpty((new ResponseEntity<>(HttpStatus.NOT_FOUND)));
     }
 
-    @PostMapping(CUSTOMER_END_POINT)
-    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping(CUSTOMER_END_POINT + "/{id}")
     public Mono<Customer> createCustomer(@RequestBody Customer customer ){
         return customerRepository.save(customer);
     }
+
+    @PutMapping(CUSTOMER_END_POINT + "/update/{id}")
+    public Mono<ResponseEntity<Customer>> updateCustomer(@PathVariable String id,
+                                                         @RequestBody Customer customer){
+        return customerRepository.findById(id)
+                .flatMap(currentCustomer -> {
+                    currentCustomer.setPhoneNumber(customer.getPhoneNumber());
+                    currentCustomer.setName(customer.getName());
+                    currentCustomer.setAge(customer.getAge());
+                    return customerRepository.save(currentCustomer);
+                })
+                .map(updateCustomer -> new ResponseEntity<>(updateCustomer,HttpStatus.OK))
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
 
     @DeleteMapping(CUSTOMER_END_POINT+ "/{id}")
     public Mono<Void> deleteCustomer(@PathVariable String id){
