@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -30,10 +28,7 @@ public class CustomerController {
 
     @GetMapping("/customers")
     public Flux <Customer> getAllCustomers() {
-        return customerRepository.deleteAll()
-                .thenMany(Flux.fromIterable(customerDataInitializer.data()))
-                .flatMap(customerRepository::save);
-
+        return customerRepository.findAll();
     }
 
     @GetMapping(CUSTOMER_END_POINT + "/{id}")
@@ -43,6 +38,12 @@ public class CustomerController {
                 .defaultIfEmpty((new ResponseEntity<>(HttpStatus.NOT_FOUND)));
     }
 
+    @PostMapping(CUSTOMER_END_POINT)
+    @ResponseStatus(HttpStatus.CREATED)
+    public Mono<Customer> CreateCustomer(@RequestBody Customer customer ){
+
+        return customerRepository.save(customer);
+    }
 
 
 }
