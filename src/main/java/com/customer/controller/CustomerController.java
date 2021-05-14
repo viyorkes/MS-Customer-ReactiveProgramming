@@ -40,10 +40,15 @@ public class CustomerController {
 
     @PostMapping(CUSTOMER_END_POINT)
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<Customer> CreateCustomer(@RequestBody Customer customer ){
-
+    public Mono<Customer> createCustomer(@RequestBody Customer customer ){
         return customerRepository.save(customer);
     }
+
+    @DeleteMapping(CUSTOMER_END_POINT+ "/{id}")
+    public Mono<Void> deleteCustomer(@PathVariable String id){
+        return customerRepository.deleteById(id);
+    }
+
 
 
 }
